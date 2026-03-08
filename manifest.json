@@ -9,12 +9,12 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "icone_psico_diario.png",
+      "src": "icone%20diario.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "icone_psico_diario.png",
+      "src": "icone%20diario.png",
       "sizes": "512x512",
       "type": "image/jpeg"
     }
