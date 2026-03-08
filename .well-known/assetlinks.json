@@ -3,6 +3,9 @@
   "target": {
     "namespace": "android_app",
     "package_name": "com.paulusxavier.diariotecnico",
-    "sha256_cert_fingerprints": ["FA:C6:17:45:DC:09:03:78:6F:B9:ED:46:28:C9:39:CB:47:72:91:AD:04:91:09:23:B0:28:CF:5B:63:3E:6D:FA"]
+    "sha256_cert_fingerprints": [
+      "FA:C6:17:45:DC:09:03:78:6F:B9:ED:46:28:C9:39:CB:47:72:91:AD:04:91:09:23:B0:28:CF:5B:63:3E:6D:FA",
+      "92:A6:52:12:44:72:6E:9E:06:5E:8B:10:63:23:80:54:62:38:64:1B:77:88:94:44:11:32:00:32:11:00:11:22"
+    ]
   }
 }]
