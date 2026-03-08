@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Diário Técnico - Paulo Xavier</title>
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
     <style>
         :root {
             --bg-dark: #0f172a;
@@ -13,7 +14,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-dark);
             color: white;
             margin: 0;
@@ -34,7 +35,7 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        h1 { font-size: 1.5rem; text-align: center; color: var(--accent); }
+        h1 { font-size: 1.5rem; text-align: center; color: var(--accent); margin-top: 0; }
 
         .info-header {
             font-size: 0.9rem;
@@ -46,15 +47,16 @@
 
         textarea {
             width: 100%;
-            height: 150px;
+            height: 250px;
             background: rgba(0, 0, 0, 0.2);
             border: 1px solid var(--accent);
             border-radius: 10px;
             color: white;
-            padding: 10px;
+            padding: 12px;
             box-sizing: border-box;
             font-size: 1rem;
             margin-bottom: 10px;
+            resize: none;
         }
 
         .btn-grid {
@@ -64,9 +66,9 @@
         }
 
         button {
-            padding: 12px;
+            padding: 14px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: bold;
             transition: 0.3s;
@@ -74,21 +76,23 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            font-size: 0.9rem;
         }
 
         .btn-voice { background-color: #ef4444; color: white; }
         .btn-gps { background-color: #10b981; color: white; }
-        .btn-pdf { background-color: #3b82f6; color: white; grid-column: span 2; }
+        .btn-pdf { background-color: #3b82f6; color: white; grid-column: span 2; margin-top: 5px; }
         
-        button:active { transform: scale(0.95); }
+        button:active { transform: scale(0.95); opacity: 0.8; }
 
-        /* Estilo para a Impressão (PDF) */
+        /* AJUSTE PARA O PDF (IMPRESSÃO) */
         @media print {
-            body { background: white; color: black; padding: 0; }
-            .container { border: none; box-shadow: none; width: 100%; max-width: none; background: transparent; }
+            body { background: white !important; color: black !important; padding: 20px; }
+            .container { border: none !important; box-shadow: none !important; width: 100%; max-width: none; background: transparent !important; backdrop-filter: none !important; }
             button, .btn-grid { display: none !important; }
-            textarea { border: none; color: black; background: transparent; height: auto; }
-            h1 { color: black; }
+            textarea { border: 1px solid #ccc !important; color: black !important; background: transparent !important; height: auto !important; overflow: visible !important; min-height: 300px; }
+            h1 { color: black !important; border-bottom: 2px solid black; padding-bottom: 5px; }
+            .info-header { color: #444 !important; border-bottom: 1px solid #ddd !important; }
         }
     </style>
 </head>
@@ -98,16 +102,16 @@
     <h1>Diário Técnico 📝</h1>
     
     <div class="info-header">
-        <div id="data-hora">Carregando data...</div>
-        <div id="localizacao">Buscando GPS...</div>
+        <div id="data-hora">🗓️ Carregando data...</div>
+        <div id="localizacao">📍 Buscando GPS...</div>
     </div>
 
-    <textarea id="relatorio" placeholder="O que aconteceu hoje, Paulo?"></textarea>
+    <textarea id="relatorio" placeholder="Relatório da sessão aqui..."></textarea>
 
     <div class="btn-grid">
         <button class="btn-voice" onclick="toggleVoz()" id="btnVoz">🎤 Gravar Voz</button>
         <button class="btn-gps" onclick="pegarGPS()">📍 Atualizar GPS</button>
-        <button class="btn-pdf" onclick="gerarPDF()">📄 Salvar como PDF</button>
+        <button class="btn-pdf" onclick="window.print()">📄 Salvar como PDF</button>
     </div>
 </div>
 
@@ -115,7 +119,7 @@
     // 1. RELÓGIO EM TEMPO REAL
     function atualizarRelogio() {
         const agora = new Date();
-        const texto = agora.toLocaleDateString('pt-BR') + " às " + agora.toLocaleTimeString('pt-BR');
+        const texto = agora.toLocaleDateString('pt-BR') + " às " + agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
         document.getElementById('data-hora').innerText = "🗓️ " + texto;
     }
     setInterval(atualizarRelogio, 1000);
@@ -138,18 +142,25 @@
     let recognition;
     let gravando = false;
 
-    if ('webkitSpeechRecognition' in window) {
-        recognition = new webkitSpeechRecognition();
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
         recognition.lang = 'pt-BR';
         recognition.continuous = true;
+        recognition.interimResults = false;
 
         recognition.onresult = (event) => {
             const texto = event.results[event.results.length - 1][0].transcript;
             document.getElementById('relatorio').value += texto + " ";
         };
+
+        recognition.onerror = () => {
+            pararVoz();
+        };
     }
 
     function toggleVoz() {
+        if (!recognition) return alert("Voz não suportada neste aparelho.");
         const btn = document.getElementById('btnVoz');
         if (!gravando) {
             recognition.start();
@@ -157,22 +168,23 @@
             btn.style.backgroundColor = "#991b1b";
             gravando = true;
         } else {
-            recognition.stop();
-            btn.innerText = "🎤 Gravar Voz";
-            btn.style.backgroundColor = "#ef4444";
-            gravando = false;
+            pararVoz();
         }
     }
 
-    // 4. GERAR PDF (IMPRESSÃO)
-    function gerarPDF() {
-        // Adiciona data/hora no texto antes de imprimir se estiver vazio
-        const campo = document.getElementById('relatorio');
-        const header = document.getElementById('data-hora').innerText;
-        const local = document.getElementById('localizacao').innerText;
-        
-        console.log("Gerando PDF do relatório...");
-        window.print();
+    function pararVoz() {
+        recognition.stop();
+        const btn = document.getElementById('btnVoz');
+        btn.innerText = "🎤 Gravar Voz";
+        btn.style.backgroundColor = "#ef4444";
+        gravando = false;
+    }
+
+    // 4. ATIVAR MODO OFFLINE (SERVICE WORKER)
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+            .then(() => console.log("Offline configurado com sucesso!"))
+            .catch(err => console.log("Erro no Service Worker:", err));
     }
 </script>
 
