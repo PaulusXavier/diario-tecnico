@@ -1,7 +1,9 @@
 {
   "name": "Diário de Campo Paulo Xavier",
   "short_name": "Diário Paulo",
-  "start_url": "./index.html",
+  "description": "Diário Técnico para Psicólogos",
+  "start_url": "/diario-tecnico/index.html",
+  "scope": "/diario-tecnico/",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
