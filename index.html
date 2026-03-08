@@ -3,188 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diário Técnico - Paulo Xavier</title>
+    <title>Diário de Campo - Paulo Xavier</title>
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <style>
-        :root {
-            --bg-dark: #0f172a;
-            --glass: rgba(255, 255, 255, 0.1);
-            --accent: #3b82f6;
-        }
-
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-dark);
-            color: white;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .container {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 20px;
-            width: 100%;
-            max-width: 500px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
-        h1 { font-size: 1.5rem; text-align: center; color: var(--accent); margin-top: 0; }
-
-        .info-header {
-            font-size: 0.9rem;
-            color: #94a3b8;
-            margin-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 10px;
-        }
-
-        textarea {
-            width: 100%;
-            height: 250px;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--accent);
-            border-radius: 10px;
-            color: white;
-            padding: 12px;
-            box-sizing: border-box;
-            font-size: 1rem;
-            margin-bottom: 10px;
-            resize: none;
-        }
-
-        .btn-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        button {
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 0.9rem;
-        }
-
-        .btn-voice { background-color: #ef4444; color: white; }
-        .btn-gps { background-color: #10b981; color: white; }
-        .btn-pdf { background-color: #3b82f6; color: white; grid-column: span 2; margin-top: 5px; }
+        :root { --bg: #0f172a; --glass: rgba(255, 255, 255, 0.1); --accent: #3b82f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
         
-        button:active { transform: scale(0.95); opacity: 0.8; }
+        .container { background: var(--glass); backdrop-filter: blur(10px); border-radius: 20px; padding: 25px; width: 100%; max-width: 600px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        /* Cabeçalho Profissional */
+        .header-professional { text-align: center; border-bottom: 2px solid var(--accent); margin-bottom: 20px; padding-bottom: 10px; }
+        .header-professional h1 { font-size: 1.4rem; margin: 0; color: white; }
+        .header-professional p { font-size: 0.9rem; color: #94a3b8; margin: 5px 0 0 0; font-weight: bold; }
+        
+        .info-header { font-size: 0.85rem; color: #cbd5e1; margin-bottom: 15px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; }
 
-        /* AJUSTE PARA O PDF (IMPRESSÃO) */
+        input#titulo { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--accent); border-radius: 8px; color: white; padding: 12px; box-sizing: border-box; margin-bottom: 15px; font-size: 1.1rem; font-weight: bold; }
+        
+        textarea { width: 100%; height: 250px; background: rgba(0,0,0,0.3); border: 1px solid var(--accent); border-radius: 10px; color: white; padding: 12px; box-sizing: border-box; margin-bottom: 15px; font-size: 1rem; line-height: 1.5; resize: none; }
+        
+        #preview-img { width: 100%; border-radius: 10px; margin-bottom: 15px; display: none; border: 2px solid var(--accent); }
+        
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        button { padding: 14px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; color: white; font-size: 0.85rem; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        
+        .btn-voz { background: #ef4444; }
+        .btn-gps { background: #10b981; }
+        .btn-img { background: #f59e0b; }
+        .btn-clear { background: #64748b; }
+        .btn-save { background: var(--accent); grid-column: span 2; font-size: 1rem; }
+        .btn-word { background: #2b579a; grid-column: span 2; }
+
+        button:active { transform: scale(0.96); }
+
+        /* Estilo de Impressão (PDF) */
         @media print {
-            body { background: white !important; color: black !important; padding: 20px; }
-            .container { border: none !important; box-shadow: none !important; width: 100%; max-width: none; background: transparent !important; backdrop-filter: none !important; }
-            button, .btn-grid { display: none !important; }
-            textarea { border: 1px solid #ccc !important; color: black !important; background: transparent !important; height: auto !important; overflow: visible !important; min-height: 300px; }
-            h1 { color: black !important; border-bottom: 2px solid black; padding-bottom: 5px; }
-            .info-header { color: #444 !important; border-bottom: 1px solid #ddd !important; }
+            body { background: white !important; color: black !important; padding: 0; }
+            .container { border: none; background: transparent; backdrop-filter: none; box-shadow: none; max-width: 100%; }
+            .header-professional h1, .header-professional p { color: black !important; }
+            .header-professional { border-bottom: 2px solid black; }
+            button, input[type="file"], .btn-grid { display: none !important; }
+            input#titulo, textarea { border: none; color: black !important; background: transparent; padding: 0; }
+            textarea { height: auto; overflow: visible; }
+            .info-header { color: black !important; background: #eee; border: 1px solid #ccc; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Diário Técnico 📝</h1>
+    <div class="header-professional">
+        <h1>Diário de Campo Paulo Xavier</h1>
+        <p>Psicólogo | CRP-20/09816</p>
+    </div>
     
     <div class="info-header">
-        <div id="data-hora">🗓️ Carregando data...</div>
-        <div id="localizacao">📍 Buscando GPS...</div>
+        <div id="data-hora">🗓️ Carregando data e hora...</div>
+        <div id="endereco">📍 Buscando endereço...</div>
     </div>
 
-    <textarea id="relatorio" placeholder="Relatório da sessão aqui..."></textarea>
+    <input type="text" id="titulo" placeholder="Título do Atendimento/Relatório">
+    
+    <img id="preview-img" src="" alt="Imagem Anexada">
+    
+    <textarea id="relatorio" placeholder="Digite ou fale o seu relatório técnico aqui..."></textarea>
+
+    <input type="file" id="input-img" accept="image/*" style="display: none;" onchange="exibirImagem(this)">
 
     <div class="btn-grid">
-        <button class="btn-voice" onclick="toggleVoz()" id="btnVoz">🎤 Gravar Voz</button>
-        <button class="btn-gps" onclick="pegarGPS()">📍 Atualizar GPS</button>
-        <button class="btn-pdf" onclick="window.print()">📄 Salvar como PDF</button>
+        <button class="btn-voz" onclick="toggleVoz()" id="btnVoz">🎤 Gravar Voz</button>
+        <button class="btn-gps" onclick="pegarGPS()">📍 Localização</button>
+        <button class="btn-img" onclick="document.getElementById('input-img').click()">🖼️ Foto</button>
+        <button class="btn-clear" onclick="limparTudo()">🗑️ Limpar</button>
+        <button class="btn-save" onclick="window.print()">📄 Gerar PDF</button>
+        <button class="btn-word" onclick="salvarWord()">🟦 Salvar em Word</button>
     </div>
 </div>
 
 <script>
-    // 1. RELÓGIO EM TEMPO REAL
+    // 1. DATA E HORA EM TEMPO REAL
     function atualizarRelogio() {
         const agora = new Date();
-        const texto = agora.toLocaleDateString('pt-BR') + " às " + agora.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
-        document.getElementById('data-hora').innerText = "🗓️ " + texto;
+        const opcoes = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const data = agora.toLocaleDateString('pt-BR', opcoes);
+        const hora = agora.toLocaleTimeString('pt-BR');
+        document.getElementById('data-hora').innerText = `🗓️ ${data} | ${hora}`;
     }
     setInterval(atualizarRelogio, 1000);
     atualizarRelogio();
 
-    // 2. FUNÇÃO GPS
+    // 2. ENDEREÇO VIA GPS
     function pegarGPS() {
-        const loc = document.getElementById('localizacao');
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((pos) => {
-                loc.innerText = `📍 Lat: ${pos.coords.latitude.toFixed(4)}, Long: ${pos.coords.longitude.toFixed(4)}`;
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                const { latitude, longitude } = pos.coords;
+                try {
+                    const resp = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+                    const data = await resp.json();
+                    document.getElementById('endereco').innerText = "📍 " + (data.display_name || "Endereço não identificado");
+                } catch {
+                    document.getElementById('endereco').innerText = `📍 Lat: ${latitude.toFixed(4)}, Lon: ${longitude.toFixed(4)}`;
+                }
             }, () => {
-                loc.innerText = "❌ GPS não autorizado";
+                document.getElementById('endereco').innerText = "❌ GPS desativado";
             });
         }
     }
     pegarGPS();
 
-    // 3. RECONHECIMENTO DE VOZ
+    // 3. ANEXO DE IMAGEM
+    function exibirImagem(input) {
+        const preview = document.getElementById('preview-img');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // 4. RECONHECIMENTO DE VOZ
     let recognition;
     let gravando = false;
-
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        recognition = new SpeechRecognition();
+    if ('webkitSpeechRecognition' in window) {
+        recognition = new webkitSpeechRecognition();
         recognition.lang = 'pt-BR';
         recognition.continuous = true;
-        recognition.interimResults = false;
-
-        recognition.onresult = (event) => {
-            const texto = event.results[event.results.length - 1][0].transcript;
-            document.getElementById('relatorio').value += texto + " ";
-        };
-
-        recognition.onerror = () => {
-            pararVoz();
+        recognition.onresult = (e) => {
+            document.getElementById('relatorio').value += e.results[e.results.length-1][0].transcript + " ";
         };
     }
 
     function toggleVoz() {
-        if (!recognition) return alert("Voz não suportada neste aparelho.");
+        if (!recognition) return alert("Voz não suportada");
         const btn = document.getElementById('btnVoz');
         if (!gravando) {
             recognition.start();
-            btn.innerText = "🛑 Parar Gravação";
-            btn.style.backgroundColor = "#991b1b";
-            gravando = true;
+            btn.innerText = "🛑 Parar";
+            btn.style.background = "#b91c1c";
         } else {
-            pararVoz();
+            recognition.stop();
+            btn.innerText = "🎤 Gravar Voz";
+            btn.style.background = "#ef4444";
+        }
+        gravando = !gravando;
+    }
+
+    // 5. BOTÃO LIMPAR
+    function limparTudo() {
+        if (confirm("Tem certeza que deseja apagar todo o conteúdo?")) {
+            document.getElementById('titulo').value = "";
+            document.getElementById('relatorio').value = "";
+            document.getElementById('preview-img').style.display = 'none';
+            document.getElementById('input-img').value = "";
         }
     }
 
-    function pararVoz() {
-        recognition.stop();
-        const btn = document.getElementById('btnVoz');
-        btn.innerText = "🎤 Gravar Voz";
-        btn.style.backgroundColor = "#ef4444";
-        gravando = false;
+    // 6. SALVAR EM WORD (.DOC)
+    function salvarWord() {
+        const titulo = document.getElementById('titulo').value || "Relatorio_Sem_Titulo";
+        const info = document.getElementById('data-hora').innerText;
+        const local = document.getElementById('endereco').innerText;
+        const texto = document.getElementById('relatorio').value;
+        
+        const html = `
+            <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+            <head><meta charset='utf-8'></head>
+            <body style="font-family: Arial;">
+                <h2 style="text-align: center;">Diário de Campo Paulo Xavier</h2>
+                <p style="text-align: center;"><b>Psicólogo | CRP-20/09816</b></p>
+                <hr>
+                <p><b>Registro:</b> ${info}</p>
+                <p><b>Local:</b> ${local}</p>
+                <h3>Título: ${titulo}</h3>
+                <p style="white-space: pre-wrap;">${texto.replace(/\n/g, '<br>')}</p>
+            </body>
+            </html>
+        `;
+
+        const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+        saveAs(blob, `${titulo}.doc`);
     }
 
-    // 4. ATIVAR MODO OFFLINE (SERVICE WORKER)
+    // REGISTRO OFFLINE
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js')
-            .then(() => console.log("Offline configurado com sucesso!"))
-            .catch(err => console.log("Erro no Service Worker:", err));
+        navigator.serviceWorker.register('./sw.js');
     }
 </script>
 
