@@ -1,15 +1,22 @@
 {
-  "name": "Diário Técnico - Paulo Xavier",
+  "name": "Diário Técnico Paulo Xavier",
   "short_name": "Diário Paulo",
-  "start_url": "index.html",
+  "description": "Sistema de Relatórios Técnicos para Psicologia",
+  "start_url": "https://paulusxavier.github.io/diario-tecnico/",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "icone_psico_diario.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "icone_psico_diario.png",
+      "sizes": "512x512",
+      "type": "image/jpeg"
     }
   ]
 }
