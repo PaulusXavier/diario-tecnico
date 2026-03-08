@@ -9,12 +9,7 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "icone%20diario.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-      "src": "icone%20diario.png",
+      "src": "iconepsi.png",
       "sizes": "512x512",
       "type": "image/jpeg"
     }
