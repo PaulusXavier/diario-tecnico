@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Diário Técnico - Paulo Xavier</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+</head>
+<body>
+
+<header>
+    <h1>PAULO XAVIER</h1>
+    <p>Psicólogo | CRP-20/09816</p>
+</header>
+
+<div class="container">
+    <section id="view-novo" class="view-section active">
+        <div class="card-app">
+            <input type="hidden" id="edit-id">
+            
+            <label>Assunto da Visita</label>
+            <input type="text" id="titulo" placeholder="Ex: Avaliação Psicossocial">
+
+            <label>Localização (Endereço Completo)</label>
+            <input type="text" id="local" placeholder="Aguardando GPS...">
+            <button class="btn-gps" onclick="pegarGPS()">📍 Obter Endereço</button>
+
+            <label>Relato Técnico</label>
+            <textarea id="relato" rows="8" placeholder="Descreva aqui sua atuação técnica..."></textarea>
+            
+            <label>Evidências</label>
+            <div style="display:flex; gap:10px; align-items:center; margin-top:10px;">
+                <button class="btn-gps" style="background:#475569" onclick="document.getElementById('f-in').click()">📸 Fotos</button>
+                <div id="p-grid" class="grid-pre"></div>
+                <input type="file" id="f-in" accept="image/*" multiple onchange="processarFotos(event)" style="display:none">
+            </div>
+
+            <button id="btn-save" class="btn-save-app" style="margin-top:30px" onclick="salvar()">GRAVAR NO SISTEMA</button>
+        </div>
+    </section>
+
+    <section id="view-lista" class="view-section">
+        <div id="lista"></div>
+    </section>
+</div>
+
+<nav class="nav-tabs">
+    <div class="nav-item active" onclick="mudarAba('novo', this)">
+        <span>📝</span><br>Novo
+    </div>
+    <div class="nav-item" onclick="mudarAba('lista', this)">
+        <span>📂</span><br>Histórico
+    </div>
+</nav>
+
+<button class="btn-voice-float" id="btn-voz">🎤</button>
+
+<script src="app.js"></script>
+<script>
+    function mudarAba(aba, el) {
+        document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        document.getElementById('view-' + aba).classList.add('active');
+        el.classList.add('active');
+        window.scrollTo(0,0);
+    }
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js');
+    }
+</script>
+</body>
+</html>
