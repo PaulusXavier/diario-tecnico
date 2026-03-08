@@ -1,8 +1,7 @@
 {
-  "name": "Diário Técnico Paulo Xavier",
+  "name": "Diário de Campo Paulo Xavier",
   "short_name": "Diário Paulo",
-  "description": "Sistema de Relatórios Técnicos para Psicologia",
-  "start_url": "https://paulusxavier.github.io/diario-tecnico/",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
@@ -12,29 +11,7 @@
       "src": "iconepsi.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "iconepsi.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "iconepsi.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Tela Inicial"
-    },
-    {
-      "src": "iconepsi.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Tela Inicial"
+      "purpose": "any maskable"
     }
   ]
 }
