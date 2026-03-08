@@ -1,4 +1,4 @@
-const CACHE_NAME = 'diario-tecnico-v1';
+const CACHE_NAME = 'diario-final-v1';
 const assets = [
   './',
   './index.html',
@@ -6,16 +6,17 @@ const assets = [
   './iconepsi.png'
 ];
 
-// Instalação: Salva arquivos no celular
+// Instalação
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
       return cache.addAll(assets);
     })
   );
+  self.skipWaiting(); // Força a ativação imediata
 });
 
-// Ativação: Limpa caches antigos
+// Ativação e limpeza de lixo antigo
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => {
@@ -26,7 +27,7 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Busca: Tenta o cache primeiro, se não tiver vai na rede
+// Responder offline
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request).then(response => {
